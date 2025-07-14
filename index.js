@@ -33,6 +33,12 @@ app.get('/contact-me', async (req, res) => {
     res.send(html)
 })
 
+app.get('/{*splat}', async (req, res) => {
+    const html = await getHTML('404')
+
+    res.send(html)
+})
+
 app.listen(8080, () => {
     console.log('now listening with express')
 })
