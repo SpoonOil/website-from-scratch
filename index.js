@@ -1,6 +1,8 @@
 const http = require('node:http');
 const fs = require('node:fs/promises');
+require("dotenv").config();
 
+console.log(process.env.NODE_ENV)
 
 async function getHTML(filename) {
     return fs.readFile(`./${filename}.html`, 'utf8')
