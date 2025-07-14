@@ -1,8 +1,8 @@
 const http = require('node:http');
 const fs = require('node:fs/promises');
 require("dotenv").config();
-
-console.log(process.env.NODE_ENV)
+const express = require('express');
+const app = express();
 
 async function getHTML(filename) {
     return fs.readFile(`./${filename}.html`, 'utf8')
@@ -15,36 +15,24 @@ async function getHTML(filename) {
         })
 }
 
-async function getWebpageFromPath (path) {
-    if (path == '') {
-        path = 'index'
-    }
-    return await getHTML(path);
-}   
+app.get('/', async (req, res) => {
+    const html = await getHTML('index')
 
-async function processRequest(req, res) {
-    const path = new URL(req.url, 'http://localhost:8080/')
-                    .pathname
-                    .slice(1);
-    
-    let html = await getWebpageFromPath(path)
-    if (html === '') {
-        res.writeHead(404, { 'Content-Type': 'text/html' });
-        html = await getHTML('404')
-    } else {
-        res.writeHead(200, { 'Content-Type': 'text/html' });
-    }
-    res.end(html);
-}
+    res.send(html)
+})
 
-async function startServer() {
-    const server = http.createServer(processRequest);
+app.get('/about', async (req, res) => {
+    const html = await getHTML('about')
 
-    server.listen(8080, 'localhost', () => {
-        console.log('opened server on 8080')
-    })
-};
+    res.send(html)
+})
 
+app.get('/contact-me', async (req, res) => {
+    const html = await getHTML('contact-me')
 
+    res.send(html)
+})
 
-startServer();
+app.listen(8080, () => {
+    console.log('now listening with express')
+})
